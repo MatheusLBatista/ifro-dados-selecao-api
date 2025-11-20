@@ -2,7 +2,7 @@
 // import cors from "cors";
 // import helmet from "helmet";
 // import compression from "compression";
-import errorHandler from "./utils/helpers/errorHandler";
+import { errorHandler } from "./utils/helpers";
 // import logger from './utils/logger.js';
 // import fileUpload from 'express-fileupload';
 import DbConnect from "./config/DbConnect";

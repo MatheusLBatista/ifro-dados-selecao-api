@@ -1,17 +1,18 @@
-import User from "../models/user";
+import Inscricao from "../models/inscricao";
+import { InscricaoDTO } from "../utils/validators/schemas/InscricaoSchema";
 
 class InscricaoRepository {
-  private user: typeof User;
+  private inscricao: typeof Inscricao;
 
   constructor() {
-    this.user = User;
+    this.inscricao = Inscricao;
   }
 
-  async create(parsedData: any) {
+  async create(parsedData: InscricaoDTO) {
     console.log("Estou em criar no UsuarioRepository");
 
-    const enrollment = await this.user.create(parsedData);
-    return enrollment.save();
+    const inscricao = await this.inscricao.create(parsedData);
+    return inscricao.save();
   }
 }
 
