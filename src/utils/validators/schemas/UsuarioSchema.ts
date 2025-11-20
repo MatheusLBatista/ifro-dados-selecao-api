@@ -1,14 +1,10 @@
 import { z } from "zod";
-import { Status } from "../../../models/Inscricao";
+import { Role } from "../../../models/Usuario";
 
-const BackgroundSchema = z.object({
-  certificado: z.string().min(5, "Link do certificado muito curto."),
-  descricao: z
-    .string()
-    .min(10, "Descrição do certificado deve ter pelo menos 10 caracteres."),
-});
+const hashPassword =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-const InscricaoSchema = z.object({
+const UsuarioSchema = z.object({
   nome: z
     .string()
     .nonempty("Campo nome é obrigatório.")
@@ -22,6 +18,20 @@ const InscricaoSchema = z.object({
     .string()
     .trim()
     .regex(/^\d{11}$/, "O celular deve conter 11 dígitos numéricos."),
+  senha: z
+    .string()
+    .min(8, "A senha deve ter pelo menos 8 caracteres.")
+    .optional()
+    .refine(
+      (password) => {
+        if (!password) return true;
+        return hashPassword.test(password);
+      },
+      {
+        message:
+          "A senha deve conter pelo menos 1 letra maiúscula, 1 letra minúscula, 1 número e 1 caractere especial.",
+      }
+    ),
   data_nascimento: z
     .string("Data de nascimento é obrigatória.")
     .trim()
@@ -59,35 +69,20 @@ const InscricaoSchema = z.object({
         )
     ),
 
-  background: z
-    .array(BackgroundSchema)
-    .min(1, "Ao menos 1 certificado é obrigatório."),
-
-  experiencia: z
-    .string()
-    .min(20, "Descreva sua experiência com pelo menos 20 caracteres."),
-
-  area_interesse: z.string().min(3, "Área de interesse é obrigatória."),
-
-  observacao: z.string().optional(),
-
-  pontuacao: z
-    .number("A pontuação deve ser um número válido entre 1 e 10")
-    .nonnegative("O valor não pode ser negativo.")
-    .max(10, "A pontuação deve ser no máximo 10.")
-    .optional(),
-
-  status: z
-    .string()
-    .transform((val) => val.toUpperCase().trim())
-    .pipe(z.enum(Object.values(Status) as [Status, ...Status[]]))
-    .default(Status.PENDENTE)
-    .optional(),
+  papel: z
+    .string({ message: "O papel é obrigatório." })
+    .transform((val) => val.toLowerCase().trim())
+    .pipe(
+      z.enum(Object.values(Role), {
+        message:
+          "Papel inválido. Use: administrador, coordenador ou avaliador.",
+      })
+    ),
 });
 
-const InscricaoUpdateSchema = InscricaoSchema.partial();
+const UsuarioUpdateSchema = UsuarioSchema.partial();
 
-export { InscricaoSchema, InscricaoUpdateSchema };
-export type InscricaoDTO = z.infer<typeof InscricaoSchema>;
-export type InscricaoInputDTO = z.input<typeof InscricaoSchema>;
-export type InscricaoUpdateDTO = z.infer<typeof InscricaoUpdateSchema>;
+export { UsuarioSchema, UsuarioUpdateSchema };
+export type UsuarioDTO = z.infer<typeof UsuarioSchema>;
+export type UsuarioInputDTO = z.input<typeof UsuarioSchema>;
+export type UsuarioUpdateDTO = z.infer<typeof UsuarioUpdateSchema>;

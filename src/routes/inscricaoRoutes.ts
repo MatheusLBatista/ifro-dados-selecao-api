@@ -6,9 +6,34 @@ const router = express.Router();
 
 const inscricaoController = new InscricaoController();
 
-router.post(
-  "/inscricao",
-  asyncWrapper(inscricaoController.create.bind(inscricaoController))
-);
+router
+  .post(
+    "/inscricao",
+    asyncWrapper(inscricaoController.create.bind(inscricaoController))
+  )
+  .get(
+    "/inscricao",
+    asyncWrapper(inscricaoController.read.bind(inscricaoController))
+  )
+  .get(
+    "/inscricao/avaliadas",
+    asyncWrapper(inscricaoController.findEvaluated.bind(inscricaoController))
+  )
+  .get(
+    "/inscricao/avaliadas/:id",
+    asyncWrapper(inscricaoController.findEvaluated.bind(inscricaoController))
+  )
+  .get(
+    "/inscricao/:id",
+    asyncWrapper(inscricaoController.read.bind(inscricaoController))
+  )
+  .patch(
+    "/inscricao/:id/avaliar",
+    asyncWrapper(inscricaoController.evaluate.bind(inscricaoController))
+  )
+  .patch(
+    "/inscricao/:id/aprovar",
+    asyncWrapper(inscricaoController.approve.bind(inscricaoController))
+  );
 
 export default router;
