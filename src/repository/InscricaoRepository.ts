@@ -14,6 +14,12 @@ class InscricaoRepository {
     const inscricao = await this.inscricao.create(parsedData);
     return inscricao.save();
   }
+
+  async findByEmail(email: string): Promise<InscricaoDTO | null> {
+    const filtro: object = { email }
+
+    return await this.inscricao.findOne(filtro);
+  }
 }
 
 export default InscricaoRepository;
