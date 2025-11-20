@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Status } from "../../../models/inscricao";
+import { Status } from "../../../models/Inscricao";
 
 const InscricaoSchema = z.object({
   nome: z
@@ -16,34 +16,41 @@ const InscricaoSchema = z.object({
     .trim()
     .regex(/^\d{11}$/, "O celular deve conter 11 dígitos numéricos."),
   data_nascimento: z
-  .string("Data de nascimento é obrigatória.")
-  .trim()
-  .regex(
-    /^\d{2}[\/.-]\d{2}[\/.-]\d{4}$/,
-    "Data deve estar no formato DD/MM/AAAA ou DD-MM-AAAA."
-  )
-  .transform((str) => {
-    const [day, month, year] = str.split(/[\/.-]/);
-    return `${year}-${month}-${day}`; 
-  })
-  .pipe(
-    z.string()
-      .transform((iso) => new Date(iso))
-      .refine((date) => date < new Date(), {
-        message: "Data de nascimento não pode ser no futuro.",
-      })
-      .refine((date) => {
-        const today = new Date();
-        let age = today.getFullYear() - date.getFullYear();
-        const monthDiff = today.getMonth() - date.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < date.getDate())) {
-          age--;
-        }
-        return age >= 16;
-      }, {
-        message: "Você deve ter pelo menos 16 anos.",
-      })
-  ),
+    .string("Data de nascimento é obrigatória.")
+    .trim()
+    .regex(
+      /^\d{2}[\/.-]\d{2}[\/.-]\d{4}$/,
+      "Data deve estar no formato DD/MM/AAAA ou DD-MM-AAAA."
+    )
+    .transform((str) => {
+      const [day, month, year] = str.split(/[\/.-]/);
+      return `${year}-${month}-${day}`;
+    })
+    .pipe(
+      z
+        .string()
+        .transform((iso) => new Date(iso))
+        .refine((date) => date < new Date(), {
+          message: "Data de nascimento não pode ser no futuro.",
+        })
+        .refine(
+          (date) => {
+            const today = new Date();
+            let age = today.getFullYear() - date.getFullYear();
+            const monthDiff = today.getMonth() - date.getMonth();
+            if (
+              monthDiff < 0 ||
+              (monthDiff === 0 && today.getDate() < date.getDate())
+            ) {
+              age--;
+            }
+            return age >= 16;
+          },
+          {
+            message: "Você deve ter pelo menos 16 anos.",
+          }
+        )
+    ),
 
   background: z.object({
     certificado: z.string().min(5, "Link do certificado muito curto."),
@@ -67,4 +74,5 @@ const InscricaoUpdateSchema = InscricaoSchema.partial();
 
 export { InscricaoSchema, InscricaoUpdateSchema };
 export type InscricaoDTO = z.infer<typeof InscricaoSchema>;
+export type InscricaoInputDTO = z.input<typeof InscricaoSchema>;
 export type InscricaoUpdateDTO = z.infer<typeof InscricaoUpdateSchema>;

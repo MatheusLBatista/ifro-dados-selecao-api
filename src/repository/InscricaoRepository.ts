@@ -1,4 +1,4 @@
-import Inscricao from "../models/inscricao";
+import Inscricao from "../models/Inscricao";
 import { InscricaoDTO } from "../utils/validators/schemas/InscricaoSchema";
 
 class InscricaoRepository {

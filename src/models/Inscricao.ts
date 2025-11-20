@@ -2,16 +2,16 @@ import mongoose, { Model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
 export enum Status {
-  APROVADO = "aprovado",
-  REPROVADO = "reprovado",
-  PENDENTE = "pendente"
+  APROVADO = "Aprovado",
+  REPROVADO = "Reprovado",
+  PENDENTE = "Pendente"
 }
 
 export interface InscricaoI {
   nome: string, 
   email: string,
   telefone: string, 
-  data_nascimento: Date,
+  data_nascimento: string,
   background: {
     certificado: string,
     descricao: string
@@ -33,7 +33,7 @@ class Inscricao {
         nome: { type: String },
         email: { type: String },
         telefone: { type: String },
-        data_nascimento: { type: Date },
+        data_nascimento: { type: String },
         background: {
           certificado: { type: String },
           descricao: { type: String  }
