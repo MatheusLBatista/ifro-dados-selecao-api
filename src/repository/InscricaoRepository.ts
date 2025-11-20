@@ -9,7 +9,7 @@ class InscricaoRepository {
   }
 
   async create(parsedData: InscricaoDTO) {
-    console.log("Estou em criar no UsuarioRepository");
+    console.log("Estou em criar no InscricaoRepository");
 
     const inscricao = await this.inscricao.create(parsedData);
     return inscricao.save();

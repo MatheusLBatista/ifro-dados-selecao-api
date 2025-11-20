@@ -10,7 +10,7 @@ class InscricaoService {
   }
 
   async create(parsedData: InscricaoDTO) {
-    console.log("Estou em criar no UsuarioService");
+    console.log("Estou em criar no InscricaoService");
 
     await this.validateData(parsedData.nome, parsedData.email);
 
