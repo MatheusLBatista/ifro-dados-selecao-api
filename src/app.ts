@@ -21,13 +21,7 @@ app.use(express.json());
 routes(app);
 
 app.use((req, res, next) => {
-  return CommonResponse.error(
-    res,
-    404,
-    "resourceNotFound",
-    null,
-    [],
-  );
+  return CommonResponse.error(res, 404, "resourceNotFound", null, []);
 });
 
 app.use(errorHandler);
