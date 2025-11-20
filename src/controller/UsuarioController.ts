@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { CommonResponse } from "../utils/helpers";
 import { UsuarioSchema } from "../utils/validators/schemas/UsuarioSchema";
 import UsuarioService from "../service/UsuarioService";
-import { UsuarioIdSchema } from "../utils/validators/schemas/queries/UsuarioQuerySchema";
+import { MongoIdSchema } from "../utils/validators/schemas/queries/MongoIdSchema";
 import { CustomError, HttpStatusCodes } from "../utils/helpers";
 
 class UsuarioController {
@@ -15,7 +15,7 @@ class UsuarioController {
   async read(req: Request, res: Response) {
     const id = req?.params?.id;
     if (id) {
-      UsuarioIdSchema.parse(id);
+      MongoIdSchema.parse(id);
     }
 
     //TODO: revisar queries em usuarios
@@ -40,7 +40,7 @@ class UsuarioController {
 
   async delete(req: Request, res: Response) {
     const id: string | undefined = req?.params?.id;
-    UsuarioIdSchema.parse(id);
+    MongoIdSchema.parse(id);
 
     if (!id) {
       throw new CustomError({
