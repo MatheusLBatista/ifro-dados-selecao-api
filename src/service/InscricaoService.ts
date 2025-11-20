@@ -12,22 +12,25 @@ class InscricaoService {
   async create(parsedData: InscricaoDTO) {
     console.log("Estou em criar no UsuarioService");
 
-    await this.validateEmail(parsedData.email);
+    await this.validateData(parsedData.nome, parsedData.email);
 
+    delete parsedData.pontuacao;
+    delete parsedData.status;
     const data = await this.repository.create(parsedData);
     return data;
   }
 
-  async validateEmail(email: string) {
-    const inscricao = await this.repository.findByEmail(email);
+  async validateData(nome: string, email: string) {
+    const inscricaoEmail = await this.repository.findByEmail(email);
+    const inscricaoNome = await this.repository.findByNome(nome)
 
-    if (inscricao) {
+    if (inscricaoEmail || inscricaoNome) {
       throw new CustomError({
         statusCode: HttpStatusCodes.BAD_REQUEST.code,
         errorType: "validationError",
-        field: "email",
+        field: "email ou nome",
         details: [],
-        customMessage: "Email já inscrito.",
+        customMessage: "Nome ou email já inscrito.",
       });
     }
   }

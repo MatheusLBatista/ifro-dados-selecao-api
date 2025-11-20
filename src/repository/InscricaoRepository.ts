@@ -20,6 +20,12 @@ class InscricaoRepository {
 
     return await this.inscricao.findOne(filtro);
   }
+
+  async findByNome(nome: string): Promise<InscricaoDTO | null> {
+    const filtro: object = { nome }
+
+    return await this.inscricao.findOne(filtro);
+  }
 }
 
 export default InscricaoRepository;

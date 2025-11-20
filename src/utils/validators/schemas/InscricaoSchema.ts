@@ -1,6 +1,13 @@
 import { z } from "zod";
 import { Status } from "../../../models/Inscricao";
 
+const BackgroundSchema = z.object({
+  certificado: z.string().min(5, "Link do certificado muito curto."),
+  descricao: z
+    .string()
+    .min(10, "Descrição do certificado deve ter pelo menos 10 caracteres."),
+});
+
 const InscricaoSchema = z.object({
   nome: z
     .string()
@@ -52,12 +59,7 @@ const InscricaoSchema = z.object({
         )
     ),
 
-  background: z.object({
-    certificado: z.string().min(5, "Link do certificado muito curto."),
-    descricao: z
-      .string()
-      .min(10, "Descrição do certificado deve ter pelo menos 10 caracteres."),
-  }),
+  background: z.array(BackgroundSchema).min(1, "Ao menos 1 certificado é obrigatório."),
 
   experiencia: z
     .string()
@@ -67,7 +69,13 @@ const InscricaoSchema = z.object({
 
   observacao: z.string().optional(),
 
-  status: z.enum(Status).default(Status.PENDENTE),
+  pontuacao: z
+    .number("A pontuação deve ser um número válido entre 1 e 10")
+    .nonnegative("O valor não pode ser negativo.")
+    .max(10, "A pontuação deve ser no máximo 10.")
+    .optional(),
+
+  status: z.enum(Status).default(Status.PENDENTE).optional(),
 });
 
 const InscricaoUpdateSchema = InscricaoSchema.partial();

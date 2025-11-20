@@ -4,28 +4,31 @@ import mongoosePaginate from "mongoose-paginate-v2";
 export enum Status {
   APROVADO = "Aprovado",
   REPROVADO = "Reprovado",
-  PENDENTE = "Pendente"
+  PENDENTE = "Pendente",
+}
+
+interface Background {
+  certificado: string;
+  descricao: string;
 }
 
 export interface InscricaoI {
-  nome: string, 
-  email: string,
-  telefone: string, 
-  data_nascimento: string,
-  background: {
-    certificado: string,
-    descricao: string
-  },
-  experiencia: string, 
-  area_interesse: string,
-  observacao?: string,
-  status: Status,
-  createdAt?: Date,
+  nome: string;
+  email: string;
+  telefone: string;
+  data_nascimento: string;
+  background: Background[];
+  experiencia: string;
+  area_interesse: string;
+  observacao?: string;
+  status: Status;
+  pontuacao: number;
+  createdAt?: Date;
   updatedAt?: Date;
 }
 
 class Inscricao {
-  public model: Model <InscricaoI>
+  public model: Model<InscricaoI>;
 
   constructor() {
     const inscricaoSchema = new mongoose.Schema<InscricaoI>(
@@ -34,14 +37,22 @@ class Inscricao {
         email: { type: String },
         telefone: { type: String },
         data_nascimento: { type: String },
-        background: {
-          certificado: { type: String },
-          descricao: { type: String  }
-        },
+        background: [
+          {
+            certificado: { type: String },
+            descricao: { type: String },
+            _id: false,
+          }
+        ],
         experiencia: { type: String },
         area_interesse: { type: String },
         observacao: { type: String },
-        status: { type: String, enum: Object.values(Status), default: Status.PENDENTE }
+        pontuacao: { type: Number, default: null },
+        status: {
+          type: String,
+          enum: Object.values(Status),
+          default: Status.PENDENTE,
+        },
       },
       {
         timestamps: true,
@@ -49,7 +60,7 @@ class Inscricao {
       }
     );
 
-    inscricaoSchema.plugin(mongoosePaginate)
+    inscricaoSchema.plugin(mongoosePaginate);
     this.model = mongoose.model<InscricaoI>("Inscricao", inscricaoSchema);
   }
 }
