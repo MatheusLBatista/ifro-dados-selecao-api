@@ -6,6 +6,7 @@ import {
   InscricaoUpdateSchema,
 } from "../utils/validators/schemas/InscricaoSchema";
 import { MongoIdSchema } from "../utils/validators/schemas/queries/MongoIdSchema";
+import { InscricaoQuerySchema } from "../utils/validators/schemas/queries/InscricaoQuerySchema";
 
 class InscricaoController {
   private service: InscricaoService;
@@ -20,11 +21,10 @@ class InscricaoController {
       MongoIdSchema.parse(id);
     }
 
-    //TODO: revisar queries em inscricao
-    // const query = req?.query;
-    // if (Object.keys(query).length !== 0) {
-    //   await UsuarioQuerySchema.parseAsync(query);
-    // }
+    const query = req?.query;
+    if (Object.keys(query).length !== 0) {
+      await InscricaoQuerySchema.parseAsync(query);
+    }
 
     const data = await this.service.read(req);
     return CommonResponse.success(res, data);
@@ -36,11 +36,10 @@ class InscricaoController {
       MongoIdSchema.parse(id);
     }
 
-    //TODO: revisar queries em inscricao
-    // const query = req?.query;
-    // if (Object.keys(query).length !== 0) {
-    //   await UsuarioQuerySchema.parseAsync(query);
-    // }
+    const query = req?.query;
+    if (Object.keys(query).length !== 0) {
+      await InscricaoQuerySchema.parseAsync(query);
+    }
 
     const data = await this.service.findEvaluated(req);
     return CommonResponse.success(res, data);

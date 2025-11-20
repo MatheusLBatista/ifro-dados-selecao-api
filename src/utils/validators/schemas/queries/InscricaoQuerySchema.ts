@@ -21,7 +21,23 @@ export const InscricaoQuerySchema = z.object({
     .transform((val) => val?.toLowerCase().trim())
     .optional(),
 
-  status: InscricaoStatusEnum.optional(),
+  status: z.string()
+    .transform((val) => {
+      if (!val) return val;
+      const normalized = val.toLowerCase().trim();
+      const mapping: { [key: string]: string } = {
+        aprovado: "aprovado",
+        reprovado: "reprovado",
+        pendente: "pendente",
+      };
+      return mapping[normalized] || val;
+    })
+    .pipe(
+      z.enum(["aprovado", "reprovado", "pendente"], {
+        message: "O status deve ser: aprovado, reprovado ou pendente.",
+      })
+    )
+    .optional(),
 
   pontuacaoMin: z
     .string()
