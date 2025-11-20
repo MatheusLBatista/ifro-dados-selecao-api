@@ -81,8 +81,8 @@ const InscricaoSchema = z.object({
     .string()
     .transform((val) => val.toUpperCase().trim())
     .pipe(z.enum(Object.values(Status) as [Status, ...Status[]]))
-    .optional()
-    .default(Status.PENDENTE),
+    .default(Status.PENDENTE)
+    .optional(),
 });
 
 const InscricaoUpdateSchema = InscricaoSchema.partial();

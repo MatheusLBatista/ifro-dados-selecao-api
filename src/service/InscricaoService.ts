@@ -19,6 +19,12 @@ class InscricaoService {
     return data;
   }
 
+  async findEvaluated(req: Request) {
+    const data = await this.repository.findEvaluated(req);
+
+    return data;
+  }
+
   async create(parsedData: InscricaoDTO) {
     console.log("Estou em criar no InscricaoService");
 

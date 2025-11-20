@@ -32,41 +32,13 @@ class InscricaoRepository {
     return await this.inscricao.find();
   }
 
-  async create(parsedData: InscricaoDTO) {
-    console.log("Estou em criar no InscricaoRepository");
+  async findEvaluated(req: Request) {
+    const { id } = req.params;
 
-    const inscricao = await this.inscricao.create(parsedData);
-    return inscricao.save();
-  }
+    if (id) {
+      const data = await this.inscricao.findById(id).find({ pontuacao: { $ne: null } });
 
-  async evaluate(id: string, parsedData: InscricaoDTO) {
-    const user = await this.inscricao.findByIdAndUpdate(id, parsedData, {new: true});
-    return user;
-  }
-
-  async approve(id: string, parsedData: InscricaoDTO) {
-    const user = await this.inscricao.findByIdAndUpdate(id, parsedData, {new: true});
-    return user;
-  }
-
-  async findByEmail(email: string): Promise<InscricaoDTO | null> {
-    const filtro: object = { email }
-
-    return await this.inscricao.findOne(filtro);
-  }
-
-  async findByNome(nome: string): Promise<InscricaoDTO | null> {
-    const filtro: object = { nome }
-
-    return await this.inscricao.findOne(filtro);
-  }
-
-  async findById(id: string) {
-      let query = this.inscricao.findById(id);
-  
-      const inscricao = await query;
-  
-      if (!inscricao) {
+      if (!data || data.length === 0) {
         throw new CustomError({
           statusCode: 404,
           errorType: "resourceNotFound",
@@ -75,9 +47,65 @@ class InscricaoRepository {
           customMessage: messages.error.resourceNotFound("Inscrição"),
         });
       }
-  
-      return inscricao;
+
+      return data;
     }
+
+    return await this.inscricao
+      .find({ pontuacao: { $ne: null } })
+      .sort({ updatedAt: -1 });
+  }
+
+  async create(parsedData: InscricaoDTO) {
+    console.log("Estou em criar no InscricaoRepository");
+
+    const inscricao = await this.inscricao.create(parsedData);
+    return inscricao.save();
+  }
+
+  async evaluate(id: string, parsedData: InscricaoDTO) {
+    const user = await this.inscricao.findByIdAndUpdate(id, parsedData, {
+      new: true,
+    });
+    return user;
+  }
+
+  async approve(id: string, parsedData: InscricaoDTO) {
+    const user = await this.inscricao.findByIdAndUpdate(id, parsedData, {
+      new: true,
+    });
+    return user;
+  }
+
+  async findByEmail(email: string): Promise<InscricaoDTO | null> {
+    const filtro: object = { email };
+
+    return await this.inscricao.findOne(filtro);
+  }
+
+  async findByNome(nome: string): Promise<InscricaoDTO | null> {
+    const filtro: object = { nome };
+
+    return await this.inscricao.findOne(filtro);
+  }
+
+  async findById(id: string) {
+    let query = this.inscricao.findById(id);
+
+    const inscricao = await query;
+
+    if (!inscricao) {
+      throw new CustomError({
+        statusCode: 404,
+        errorType: "resourceNotFound",
+        field: "Inscrição",
+        details: [],
+        customMessage: messages.error.resourceNotFound("Inscrição"),
+      });
+    }
+
+    return inscricao;
+  }
 }
 
 export default InscricaoRepository;

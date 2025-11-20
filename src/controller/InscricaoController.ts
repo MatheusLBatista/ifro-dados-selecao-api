@@ -1,6 +1,6 @@
 import InscricaoService from "../service/InscricaoService";
 import { Request, Response } from "express";
-import { CommonResponse } from "../utils/helpers";
+import { CommonResponse, CustomError, HttpStatusCodes } from "../utils/helpers";
 import {
   InscricaoSchema,
   InscricaoUpdateSchema,
@@ -30,6 +30,22 @@ class InscricaoController {
     return CommonResponse.success(res, data);
   }
 
+  async findEvaluated(req: Request, res: Response) {
+    const id = req?.params?.id;
+    if (id) {
+      MongoIdSchema.parse(id);
+    }
+
+    //TODO: revisar queries em inscricao
+    // const query = req?.query;
+    // if (Object.keys(query).length !== 0) {
+    //   await UsuarioQuerySchema.parseAsync(query);
+    // }
+
+    const data = await this.service.findEvaluated(req);
+    return CommonResponse.success(res, data);
+  }
+
   async create(req: Request, res: Response) {
     console.log("Estou no criar em InscricaoController");
 
@@ -41,12 +57,23 @@ class InscricaoController {
   }
 
   async evaluate(req: Request, res: Response) {
-    const id: string | undefined = req?.params?.id;
+    const id = req.params.id;
+
+    if (!id) {
+      throw new CustomError({
+        statusCode: HttpStatusCodes.BAD_REQUEST.code,
+        errorType: "validationError",
+        field: "id",
+        details: [],
+        customMessage: "ID é obrigatório na URL para avaliar.",
+      });
+    }
+
     MongoIdSchema.parse(id);
 
     const parsedData = InscricaoUpdateSchema.parse(req.body);
 
-    const data = await this.service.evaluate(id!, parsedData);
+    const data = await this.service.evaluate(id, parsedData);
 
     let cleanInscricao = data?.toObject();
 
@@ -58,12 +85,23 @@ class InscricaoController {
     );
   }
   async approve(req: Request, res: Response) {
-    const id: string | undefined = req?.params?.id;
+    const id = req.params.id;
+
+    if (!id) {
+      throw new CustomError({
+        statusCode: HttpStatusCodes.BAD_REQUEST.code,
+        errorType: "validationError",
+        field: "id",
+        details: [],
+        customMessage: "ID é obrigatório na URL para aprovar.",
+      });
+    }
+
     MongoIdSchema.parse(id);
 
     const parsedData = InscricaoUpdateSchema.parse(req.body);
 
-    const data = await this.service.approve(id!, parsedData);
+    const data = await this.service.approve(id, parsedData);
 
     let cleanInscricao = data?.toObject();
 

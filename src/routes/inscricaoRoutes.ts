@@ -16,6 +16,14 @@ router
     asyncWrapper(inscricaoController.read.bind(inscricaoController))
   )
   .get(
+    "/inscricao/avaliadas",
+    asyncWrapper(inscricaoController.findEvaluated.bind(inscricaoController))
+  )
+  .get(
+    "/inscricao/avaliadas/:id",
+    asyncWrapper(inscricaoController.findEvaluated.bind(inscricaoController))
+  )
+  .get(
     "/inscricao/:id",
     asyncWrapper(inscricaoController.read.bind(inscricaoController))
   )
