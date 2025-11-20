@@ -22,10 +22,16 @@ export default async function seed_inscricao(): Promise<InscricaoDTO[]> {
     email: "mario.pedro2@email.com",
     telefone: "69992723354",
     data_nascimento: "09-09-2000",
-    background: {
-      certificado: "https://udemy.com/certificate/UC-abc123xyz",
-      descricao: "Curso completo de Node.js e Express com mais de 40 horas.",
-    },
+    background: [
+      {
+        certificado: "https://udemy.com/certificate/UC-abc123xyz",
+        descricao: "Curso completo de Node.js e Express com mais de 40 horas.",
+      },
+      {
+        certificado: "https://udemy.com/certificate/UC-typescript",
+        descricao: "Curso de Typescript e Next.js com mais de 100 horas.",
+      },
+    ],
     experiencia:
       "Atuei por 1 ano como estagiário back-end em uma startup de fintech.",
     area_interesse: "Back-end Node.js",
@@ -40,10 +46,12 @@ export default async function seed_inscricao(): Promise<InscricaoDTO[]> {
       data_nascimento: faker.date
         .between({ from: new Date("1950-01-01"), to: new Date("2009-12-31") })
         .toLocaleDateString("pt-BR"),
-      background: {
-        certificado: faker.internet.url() + "/" + uuid() + ".jpg",
-        descricao: faker.lorem.sentence(),
-      },
+      background: [
+        {
+          certificado: faker.internet.url() + "/" + uuid() + ".jpg",
+          descricao: faker.lorem.sentence(),
+        },
+      ],
       experiencia: faker.lorem.paragraph(),
       area_interesse: faker.person.jobArea(),
       observacao: faker.lorem.sentence(),

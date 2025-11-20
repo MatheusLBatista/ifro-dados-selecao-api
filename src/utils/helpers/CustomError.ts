@@ -14,8 +14,8 @@ class CustomError extends Error {
   public customMessage?: string | null;
   public isOperational: boolean;
 
-  constructor(message?: string, options: CustomErrorOptions = {}) {
-    super(message || options.customMessage || "An error occurred");
+  constructor(options: CustomErrorOptions = {}) {
+    super(options.customMessage || "An error occurred");
 
     this.name = "CustomError";
     this.statusCode = options.statusCode;
