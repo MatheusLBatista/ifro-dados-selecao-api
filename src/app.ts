@@ -2,7 +2,7 @@
 // import cors from "cors";
 // import helmet from "helmet";
 // import compression from "compression";
-import { errorHandler } from "./utils/helpers";
+import errorHandler from "./utils/helpers/errorHandler";
 // import logger from './utils/logger.js';
 // import fileUpload from 'express-fileupload';
 import DbConnect from "./config/DbConnect";
@@ -21,13 +21,7 @@ app.use(express.json());
 routes(app);
 
 app.use((req, res, next) => {
-  return CommonResponse.error(
-    res,
-    404,
-    "resourceNotFound",
-    null,
-    [],
-  );
+  return CommonResponse.error(res, 404, "resourceNotFound", null, []);
 });
 
 app.use(errorHandler);

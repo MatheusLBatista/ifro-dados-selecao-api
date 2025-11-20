@@ -1,5 +1,3 @@
-// src/utils/helpers/CommonResponse.ts
-
 import { Response } from "express";
 import StatusService from "./StatusService";
 
@@ -8,10 +6,16 @@ interface ErrorItem {
   field?: string;
 }
 
-class CommonResponse {
+interface ResponseStructure {
   message: string;
   data: any;
   errors: ErrorItem[];
+}
+
+class CommonResponse {
+  public message: string;
+  public data: any;
+  public errors: ErrorItem[];
 
   constructor(message: string, data: any = null, errors: ErrorItem[] = []) {
     this.message = message;
@@ -19,7 +23,7 @@ class CommonResponse {
     this.errors = errors;
   }
 
-  toJSON() {
+  toJSON(): ResponseStructure {
     return {
       message: this.message,
       data: this.data,
@@ -32,7 +36,7 @@ class CommonResponse {
     data: any,
     code: number = 200,
     message: string | null = null
-  ) {
+  ): Response {
     const statusMessage = message || StatusService.getHttpCodeMessage(code);
     const response = new CommonResponse(statusMessage, data, []);
     return res.status(code).json(response);
@@ -45,35 +49,32 @@ class CommonResponse {
     field: string | null = null,
     errors: ErrorItem[] = [],
     customMessage: string | null = null
-  ) {
+  ): Response {
     const errorMessage =
       customMessage || (StatusService as any).getErrorMessage(errorType, field);
     const response = new CommonResponse(errorMessage, null, errors);
     return res.status(code).json(response);
   }
 
-  static created(res: Response, data: any, message: string | null = null) {
+  static created(
+    res: Response,
+    data: any,
+    message: string | null = null
+  ): Response {
     return this.success(res, data, 201, message);
   }
 
-  static serverError(res: Response, message: string | null = null) {
+  static serverError(res: Response, message: string | null = null): Response {
     const errorMessage =
       message || StatusService.getErrorMessage("serverError");
     const response = new CommonResponse(errorMessage, null, []);
     return res.status(500).json(response);
   }
 
-  /**
-   * Retorna o schema para o Swagger baseado na estrutura do CommonResponse.
-   *
-   * @param {string|null} schemaRef - Referência para o schema do "data", se houver.
-   * @param {string} messageExample - Exemplo de mensagem para o Swagger.
-   * @returns {object} Schema JSON da resposta.
-   */
   static getSwaggerSchema(
-    schemaRef = null,
-    messageExample = "Operação realizada com sucesso"
-  ) {
+    schemaRef: string | null = null,
+    messageExample: string = "Operação realizada com sucesso"
+  ): object {
     return {
       type: "object",
       properties: {

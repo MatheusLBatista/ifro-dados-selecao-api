@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { URL } from "url";
 import logger from "../utils/logger";
 
 dotenv.config();
@@ -26,14 +25,14 @@ class DbConnect {
       }
 
       if (process.env.NODE_ENV === "development") {
-        mongoose.set("autoIndex", true); 
-        mongoose.set("debug", true); 
+        mongoose.set("autoIndex", true);
+        mongoose.set("debug", true);
         logger.info(
           "Configurações de desenvolvimento ativadas: autoIndex e debug."
         );
       } else {
-        mongoose.set("autoIndex", false); 
-        mongoose.set("debug", false); 
+        mongoose.set("autoIndex", false);
+        mongoose.set("debug", false);
         logger.info(
           "Configurações de produção ativadas: autoIndex e debug desativados."
         );
@@ -76,7 +75,7 @@ class DbConnect {
       );
     }
   }
-  
+
   static async desconectar() {
     try {
       await mongoose.disconnect();
