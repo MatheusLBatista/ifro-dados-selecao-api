@@ -39,6 +39,15 @@ class InscricaoService {
     return data;
   }
 
+  async approve(id: string, parsedData: InscricaoUpdateDTO) {
+    const { status } = parsedData;
+
+    this.maintainPermittedFields(parsedData, ["status"]);
+
+    const data = await this.repository.approve(id, { status } as any);
+    return data;
+  }
+
   maintainPermittedFields(obj: any, permittedFields: string[]) {
     Object.keys(obj).forEach((key) => {
       if (!permittedFields.includes(key)) {

@@ -20,8 +20,12 @@ router
     asyncWrapper(inscricaoController.read.bind(inscricaoController))
   )
   .patch(
-    "/inscricao/:id",
+    "/inscricao/:id/avaliar",
     asyncWrapper(inscricaoController.evaluate.bind(inscricaoController))
+  )
+  .patch(
+    "/inscricao/:id/aprovar",
+    asyncWrapper(inscricaoController.approve.bind(inscricaoController))
   );
 
 export default router;

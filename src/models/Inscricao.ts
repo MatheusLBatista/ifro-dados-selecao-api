@@ -2,9 +2,9 @@ import mongoose, { Model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
 export enum Status {
-  APROVADO = "Aprovado",
-  REPROVADO = "Reprovado",
-  PENDENTE = "Pendente",
+  APROVADO = "APROVADO",
+  REPROVADO = "REPROVADO",
+  PENDENTE = "PENDENTE",
 }
 
 interface Background {

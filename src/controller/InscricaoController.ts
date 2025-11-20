@@ -54,7 +54,24 @@ class InscricaoController {
       res,
       cleanInscricao,
       200,
-      "Usuário avaliado com sucesso."
+      "Inscrição avaliada com sucesso."
+    );
+  }
+  async approve(req: Request, res: Response) {
+    const id: string | undefined = req?.params?.id;
+    MongoIdSchema.parse(id);
+
+    const parsedData = InscricaoUpdateSchema.parse(req.body);
+
+    const data = await this.service.approve(id!, parsedData);
+
+    let cleanInscricao = data?.toObject();
+
+    return CommonResponse.success(
+      res,
+      cleanInscricao,
+      200,
+      "Inscrição aprovada com sucesso."
     );
   }
 }

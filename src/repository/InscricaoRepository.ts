@@ -44,6 +44,11 @@ class InscricaoRepository {
     return user;
   }
 
+  async approve(id: string, parsedData: InscricaoDTO) {
+    const user = await this.inscricao.findByIdAndUpdate(id, parsedData, {new: true});
+    return user;
+  }
+
   async findByEmail(email: string): Promise<InscricaoDTO | null> {
     const filtro: object = { email }
 

@@ -59,7 +59,9 @@ const InscricaoSchema = z.object({
         )
     ),
 
-  background: z.array(BackgroundSchema).min(1, "Ao menos 1 certificado é obrigatório."),
+  background: z
+    .array(BackgroundSchema)
+    .min(1, "Ao menos 1 certificado é obrigatório."),
 
   experiencia: z
     .string()
@@ -75,7 +77,12 @@ const InscricaoSchema = z.object({
     .max(10, "A pontuação deve ser no máximo 10.")
     .optional(),
 
-  status: z.enum(Status).default(Status.PENDENTE).optional(),
+  status: z
+    .string()
+    .transform((val) => val.toUpperCase().trim())
+    .pipe(z.enum(Object.values(Status) as [Status, ...Status[]]))
+    .optional()
+    .default(Status.PENDENTE),
 });
 
 const InscricaoUpdateSchema = InscricaoSchema.partial();
