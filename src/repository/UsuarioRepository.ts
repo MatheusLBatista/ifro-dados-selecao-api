@@ -2,6 +2,8 @@ import Usuario from "../models/Usuario";
 import { UsuarioDTO } from "../utils/validators/schemas/UsuarioSchema";
 import { CustomError, messages } from "../utils/helpers";
 import { Request } from "express";
+import UsuarioFilterBuild from "./filters/UsuarioFilterBuild";
+import { Role } from "../models/Usuario";
 
 class UsuarioRepository {
   private usuario: typeof Usuario;
@@ -12,25 +14,38 @@ class UsuarioRepository {
 
   //TODO: adicionar metodo patch
   async read(req: Request) {
-    const { id } = req.params;
+    const {
+      nome,
+      email,
+      papel,
+      page = "1",
+      limite = "10",
+    } = req.query;
 
-    if (id) {
-      const data = await this.usuario.findById(id);
+    const pageNum = Math.max(parseInt(page as string, 10) || 1, 1);
+    const limit = Math.min(
+      Math.max(parseInt(limite as string, 10) || 10, 1),
+      100
+    );
 
-      if (!data) {
-        throw new CustomError({
-          statusCode: 404,
-          errorType: "resourceNotFound",
-          field: "Usuário",
-          details: [],
-          customMessage: messages.error.resourceNotFound("Usuário"),
-        });
-      }
+    const filterBuilder = new UsuarioFilterBuild();
 
-      return data;
-    }
+    if (nome) filterBuilder.comNome(nome as string);
+    if (email) filterBuilder.comEmail(email as string);
+    if (papel) filterBuilder.comPapel(papel as Role)
+    const filtros = filterBuilder.build();
 
-    return await this.usuario.find();
+    const options = {
+      page: pageNum,
+      limit,
+      sort: { createdAt: -1 },
+      lean: true,
+    };
+
+    const PaginatedModel = this.usuario as any;
+    const data = await PaginatedModel.paginate(filtros, options);
+
+    return data;
   }
 
   async create(parsedData: UsuarioDTO) {

@@ -1,7 +1,8 @@
-import Inscricao from "../models/Inscricao";
+import Inscricao, { Status } from "../models/Inscricao";
 import { InscricaoDTO } from "../utils/validators/schemas/InscricaoSchema";
 import { Request } from "express";
 import { CustomError, messages } from "../utils/helpers";
+import InscricaoFilterBuild from "./filters/InscricaoFilterBuild";
 
 class InscricaoRepository {
   private inscricao: typeof Inscricao;
@@ -11,49 +12,80 @@ class InscricaoRepository {
   }
 
   async read(req: Request) {
-    const { id } = req.params;
+    const {
+      nome,
+      email,
+      page = "1",
+      limite = "10",
+    } = req.query;
 
-    if (id) {
-      const data = await this.inscricao.findById(id);
+    const pageNum = Math.max(parseInt(page as string, 10) || 1, 1);
+    const limit = Math.min(
+      Math.max(parseInt(limite as string, 10) || 10, 1),
+      100
+    );
 
-      if (!data) {
-        throw new CustomError({
-          statusCode: 404,
-          errorType: "resourceNotFound",
-          field: "Inscrição",
-          details: [],
-          customMessage: messages.error.resourceNotFound("Inscrição"),
-        });
-      }
+    const filterBuilder = new InscricaoFilterBuild();
 
-      return data;
-    }
+    if (nome) filterBuilder.comNome(nome as string);
+    if (email) filterBuilder.comEmail(email as string);
+    const filtros = filterBuilder.build();
 
-    return await this.inscricao.find();
+    const options = {
+      page: pageNum,
+      limit,
+      sort: { createdAt: -1 },
+      lean: true,
+    };
+
+    const PaginatedModel = this.inscricao as any;
+    const data = await PaginatedModel.paginate(filtros, options);
+
+    return data;
   }
 
   async findEvaluated(req: Request) {
-    const { id } = req.params;
+    const {
+      nome,
+      email,
+      status,
+      pontuacaoMin,
+      pontuacaoMax,
+      page = "1",
+      limite = "10",
+    } = req.query;
 
-    if (id) {
-      const data = await this.inscricao.findById(id).find({ pontuacao: { $ne: null } });
+    const pageNum = Math.max(parseInt(page as string, 10) || 1, 1);
+    const limit = Math.min(
+      Math.max(parseInt(limite as string, 10) || 10, 1),
+      100
+    );
 
-      if (!data || data.length === 0) {
-        throw new CustomError({
-          statusCode: 404,
-          errorType: "resourceNotFound",
-          field: "Inscrição",
-          details: [],
-          customMessage: messages.error.resourceNotFound("Inscrição"),
-        });
-      }
+    const filterBuilder = new InscricaoFilterBuild().comPontuacaoAvaliada();
 
-      return data;
+    if (nome) filterBuilder.comNome(nome as string);
+    if (email) filterBuilder.comEmail(email as string);
+    if (status) filterBuilder.comStatus(status as Status);
+    if (pontuacaoMin || pontuacaoMax) {
+      filterBuilder.comPontuacaoEntre(
+        pontuacaoMin ? Number(pontuacaoMin) : 0,
+        pontuacaoMax ? Number(pontuacaoMax) : 10
+      );
     }
 
-    return await this.inscricao
-      .find({ pontuacao: { $ne: null } })
-      .sort({ updatedAt: -1 });
+    const filtros = filterBuilder.build();
+
+    const options = {
+      page: pageNum,
+      limit,
+      sort: { createdAt: -1 },
+      lean: true,
+    };
+
+    const PaginatedModel = this.inscricao as any;
+    const data = await PaginatedModel.paginate(filtros, options);
+
+    return data;
   }
 
   async create(parsedData: InscricaoDTO) {
@@ -109,3 +141,21 @@ class InscricaoRepository {
 }
 
 export default InscricaoRepository;
+
+  // async findByIdAndEvaluation(id: string) {
+  //   let query = this.inscricao.findById(id).find({ pontuacao: { $ne: null } });
+
+  //   const inscricao = await query;
+
+  //   if (!inscricao) {
+  //     throw new CustomError({
+  //       statusCode: 404,
+  //       errorType: "resourceNotFound",
+  //       field: "Inscrição",
+  //       details: [],
+  //       customMessage: messages.error.resourceNotFound("Inscrição"),
+  //     });
+  //   }
+
+  //   return inscricao;
+  // }

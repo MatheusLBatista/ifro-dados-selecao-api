@@ -4,6 +4,7 @@ import { UsuarioSchema } from "../utils/validators/schemas/UsuarioSchema";
 import UsuarioService from "../service/UsuarioService";
 import { MongoIdSchema } from "../utils/validators/schemas/queries/MongoIdSchema";
 import { CustomError, HttpStatusCodes } from "../utils/helpers";
+import { UsuarioQuerySchema } from "../utils/validators/schemas/queries/UsuarioQuerySchema";
 
 class UsuarioController {
   private service: UsuarioService;
@@ -18,11 +19,10 @@ class UsuarioController {
       MongoIdSchema.parse(id);
     }
 
-    //TODO: revisar queries em usuarios
-    // const query = req?.query;
-    // if (Object.keys(query).length !== 0) {
-    //   await UsuarioQuerySchema.parseAsync(query);
-    // }
+    const query = req?.query;
+    if (Object.keys(query).length !== 0) {
+      await UsuarioQuerySchema.parseAsync(query);
+    }
 
     const data = await this.service.read(req);
     return CommonResponse.success(res, data);

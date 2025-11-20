@@ -5,6 +5,7 @@ import {
 } from "../utils/validators/schemas/InscricaoSchema";
 import { CustomError, HttpStatusCodes } from "../utils/helpers";
 import { Request } from "express";
+import { InscricaoQuerySchema } from "../utils/validators/schemas/queries/InscricaoQuerySchema";
 
 class InscricaoService {
   private repository: InscricaoRepository;
@@ -14,12 +15,37 @@ class InscricaoService {
   }
 
   async read(req: Request) {
+    const { id } = req.params;
+
+    if (id) {
+      const data = await this.repository.findById(id);
+      return data;
+    }
+
+    const query = req.query || {};
+    if (Object.keys(query).length !== 0) {
+      await InscricaoQuerySchema.parseAsync(query);
+    }
+
     const data = await this.repository.read(req);
 
     return data;
   }
 
   async findEvaluated(req: Request) {
+    const { id } = req.params;
+
+    if (id) {
+      const data = await this.repository.findById(id);
+
+      return data;
+    }
+
+    const query = req.query || {};
+    if (Object.keys(query).length !== 0) {
+      await InscricaoQuerySchema.parseAsync(query);
+    }
+
     const data = await this.repository.findEvaluated(req);
 
     return data;
