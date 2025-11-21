@@ -4,7 +4,7 @@ API para gerenciamento de inscrições do Instituto Federal de Rondônia.
 
 ## Tecnologias Utilizadas
 
-- **TypeScript** e **Node.js** 
+- **TypeScript** e **Node.js**
 - **Express** - Framework web
 - **MongoDB** com **Mongoose** - Banco de dados
 - **JWT** - Autenticação
@@ -12,33 +12,6 @@ API para gerenciamento de inscrições do Instituto Federal de Rondônia.
 - **Zod** - Validação de dados
 - **Swagger** - Documentação da API
 - **Jest** - Testes
-
-## Instalação
-
-1. Clone o repositório:
-
-```bash
-git clone <https://gitlab.fslab.dev/matheus.lucas.batista/ifro-dados-selecao-api.git>
-cd api-inscricao
-```
-
-2. Instale as dependências:
-
-```bash
-npm install
-```
-
-3. Configure as variáveis de ambiente:
-
-```bash
-cp .env.example .env
-```
-
-4. Execute a inserção de dados no banco:
-
-```bash
-npm run seed
-```
 
 ## Executando a Aplicação
 
@@ -52,6 +25,13 @@ npm run seed
 #### Iniciar a aplicação
 
 ```bash
+# Clone o repositório
+git clone <https://gitlab.fslab.dev/matheus.lucas.batista/ifro-dados-selecao-api.git>
+
+# Acesse o diretório do projeto
+cd ifro-dados-selecao-api
+
+# Construir e iniciar os containers
 docker compose up --build -d
 ```
 
@@ -91,13 +71,20 @@ docker compose down -v
 
 #### Configuração
 
-1. Configure o arquivo `.env`:
-
 ```bash
-cp .env.example .env
-```
+# Clone o repositório
+git clone <https://gitlab.fslab.dev/matheus.lucas.batista/ifro-dados-selecao-api.git>
 
-2. Edite o `.env` com suas configurações locais.
+# Acesse o diretório do projeto
+cd ifro-dados-selecao-api
+
+# Instale as dependências
+npm install
+
+# Configure o arquivo .env
+cp .env.example .env
+# Edite o .env com suas configurações locais
+```
 
 #### Desenvolvimento
 
@@ -147,10 +134,11 @@ http://localhost:5011/api-docs
 - `GET /inscricao` - Listar inscrições (requer autenticação)
 - `GET /inscricao/:id` - Obter inscrição por ID (requer autenticação)
 - `GET /inscricao/avaliadas` - Listar inscrições avaliadas (requer autenticação)
+- `GET /inscricao/avaliadas/:id` - Obter inscrição avaliada por ID (requer autenticação)
 - `PATCH /inscricao/:id/avaliar` - Avaliar inscrição (requer autenticação)
 - `PATCH /inscricao/:id/aprovar` - Aprovar inscrição (requer autenticação)
 
-## Estrutura do Projeto
+## Estrutura do projeto
 
 ```
 src/
@@ -172,7 +160,7 @@ src/
 └── utils/                # Utilitários diversos
 ```
 
-### Papéis de Usuário
+### Papéis do usuário
 
 - **Administrador**: Acesso completo ao sistema
 - **Coordenador**: Listagem de usuários e inscrições e aprovação de inscrições
