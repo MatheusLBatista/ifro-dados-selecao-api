@@ -13,6 +13,9 @@ export interface UsuarioI {
   senha: string;
   data_nascimento: string;
   telefone: string;
+  tokenUnico:string;
+  refreshtoken:string;
+  accesstoken:string;
   papel: Role;
 }
 
@@ -28,6 +31,9 @@ class Usuario {
         data_nascimento: { type: String},
         telefone: { type: String },
         papel: { type: String, enum: Object.values(Role) },
+        tokenUnico: { type: String, select: false },
+        refreshtoken: { type: String, select: false },
+        accesstoken: { type: String, select: false },
       },
       {
         timestamps: true,
