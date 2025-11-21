@@ -29,7 +29,7 @@ class UsuarioFilterBuild {
   }
 
   build() {
-    return this.filters;
+    return { ...this.filters };
   }
 }
 

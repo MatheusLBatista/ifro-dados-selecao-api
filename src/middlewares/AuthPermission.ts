@@ -14,8 +14,6 @@ declare global {
   }
 }
 
-const accessToken: string = process.env.JWT_SECRET_ACCESS_TOKEN || "";
-
 const ROUTE_RULES: Record<string, Record<string, string[]>> = {
   "/inscricao": {
     GET: ["administrador", "coordenador", "avaliador"],
@@ -68,7 +66,7 @@ class AuthPermission {
 
       const token = header.split(" ")[1];
 
-      if (!accessToken) {
+      if (!process.env.JWT_SECRET_ACCESS_TOKEN) {
         throw new CustomError({
           statusCode: 401,
           errorType: "authenticationError",
@@ -78,9 +76,13 @@ class AuthPermission {
         });
       }
 
-      const decoded = (jwt.verify as any)(token, accessToken);
+      const decoded = (jwt.verify as any)(
+        token,
+        process.env.JWT_SECRET_ACCESS_TOKEN
+      );
 
       const usuario = await this.repository.findById(decoded.id);
+    
       const papel = usuario.papel.toLowerCase();
 
       const basePath = req.baseUrl;
@@ -128,7 +130,17 @@ class AuthPermission {
         });
       }
 
-      throw err;
+      if (err instanceof CustomError) {
+        throw err;
+      }
+
+      throw new CustomError({
+        statusCode: 401,
+        errorType: "authenticationError",
+        field: "AuthenticationError",
+        details: [],
+        customMessage: "Erro de autenticação.",
+      });
     }
   }
 }
