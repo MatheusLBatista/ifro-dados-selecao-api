@@ -13,7 +13,7 @@ router
     asyncWrapper(authController.login.bind(authController))
   )
   .post(
-    "/logout",
+    "/logout", AuthMiddleware,
     asyncWrapper(authController.logout.bind(authController))
   );
 
