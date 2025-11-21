@@ -2,7 +2,6 @@ import AuthMiddleware from "../../middlewares/AuthMiddleware";
 import jwt from "jsonwebtoken";
 import { CustomError } from "../../utils/helpers";
 
-// Mock do AuthService
 jest.mock("../../service/AuthService");
 import AuthService from "../../service/AuthService";
 
@@ -23,14 +22,11 @@ describe("AuthMiddleware", () => {
     };
     mockRes = {};
     mockNext = jest.fn();
-
-    // Reset mocks
+    
     mockAuthService.loadTokens.mockReset();
-
-    // Mock do JWT
+    
     jest.spyOn(jwt, "verify").mockReturnValue({ id: "user123" } as any);
-
-    // Mock das variáveis de ambiente
+    
     process.env.JWT_SECRET_ACCESS_TOKEN = "test-secret";
   });
 

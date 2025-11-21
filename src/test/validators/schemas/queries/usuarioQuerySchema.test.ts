@@ -109,8 +109,6 @@ describe("UsuarioQuerySchema", () => {
       });
 
       it("deve rejeitar page não inteira", () => {
-        // parseInt("2.5") retorna 2, que é válido
-        // O teste verifica se valores não numéricos falham
         expect(() => UsuarioQuerySchema.parse({ page: "abc" })).toThrow(
           "page deve ser um número inteiro maior que 0."
         );

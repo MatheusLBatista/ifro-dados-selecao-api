@@ -82,15 +82,7 @@ class AuthPermission {
       );
 
       const usuario = await this.repository.findById(decoded.id);
-      if (!usuario) {
-        throw new CustomError({
-          statusCode: 401,
-          errorType: "authenticationError",
-          field: "AuthenticationError",
-          details: [],
-          customMessage: "Usuário não encontrado.",
-        });
-      }
+    
       const papel = usuario.papel.toLowerCase();
 
       const basePath = req.baseUrl;
@@ -141,7 +133,7 @@ class AuthPermission {
       if (err instanceof CustomError) {
         throw err;
       }
-      
+
       throw new CustomError({
         statusCode: 401,
         errorType: "authenticationError",

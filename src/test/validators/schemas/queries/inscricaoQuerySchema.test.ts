@@ -204,8 +204,6 @@ describe("InscricaoQuerySchema", () => {
       });
 
       it("deve rejeitar limite não inteiro", () => {
-        // parseInt("50.5") retorna 50, que é válido
-        // O teste verifica se valores não numéricos falham
         expect(() => InscricaoQuerySchema.parse({ limite: "abc" })).toThrow(
           "limite deve ser um número inteiro entre 1 e 100."
         );

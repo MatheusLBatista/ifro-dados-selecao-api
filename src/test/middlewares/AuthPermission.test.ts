@@ -1,25 +1,19 @@
-// Mock do UsuarioRepository
 jest.mock("../../repository/UsuarioRepository");
 import UsuarioRepository from "../../repository/UsuarioRepository";
 
-// Criar uma instância mockada
 const mockRepositoryInstance = {
   findById: jest.fn(),
 };
-
-// Mock da classe para retornar a instância mockada
 (
   UsuarioRepository as jest.MockedClass<typeof UsuarioRepository>
 ).mockImplementation(() => mockRepositoryInstance as any);
 
-// Sobrescrever o método no prototype para garantir que funcione
 UsuarioRepository.prototype.findById = mockRepositoryInstance.findById;
 
 import AuthPermission from "../../middlewares/AuthPermission";
 import jwt from "jsonwebtoken";
 import { CustomError } from "../../utils/helpers";
 
-// Mock do jwt
 jest.mock("jsonwebtoken", () => ({
   verify: jest.fn(),
 }));
@@ -39,13 +33,10 @@ describe("AuthPermission", () => {
     mockRes = {};
     mockNext = jest.fn();
 
-    // Reset mocks
     mockRepositoryInstance.findById.mockReset();
 
-    // Mock do JWT
     (jwt.verify as jest.Mock).mockReturnValue({ id: "user123" });
 
-    // Mock das variáveis de ambiente
     process.env.JWT_SECRET_ACCESS_TOKEN = "test-secret";
   });
 
