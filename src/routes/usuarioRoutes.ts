@@ -10,16 +10,27 @@ const usuarioController = new UsuarioController();
 
 router
   .post(
-    "/usuario", AuthMiddleware, AuthPermission,
+    "/usuario",
+    AuthMiddleware,
+    AuthPermission,
     asyncWrapper(usuarioController.create.bind(usuarioController))
   )
-  .get("/usuario", AuthMiddleware, AuthPermission, asyncWrapper(usuarioController.read.bind(usuarioController)))
   .get(
-    "/usuario/:id", AuthMiddleware, AuthPermission,
+    "/usuario",
+    AuthMiddleware,
+    AuthPermission,
+    asyncWrapper(usuarioController.read.bind(usuarioController))
+  )
+  .get(
+    "/usuario/:id",
+    AuthMiddleware,
+    AuthPermission,
     asyncWrapper(usuarioController.read.bind(usuarioController))
   )
   .delete(
-    "/usuario/:id", AuthMiddleware, AuthPermission,
+    "/usuario/:id",
+    AuthMiddleware,
+    AuthPermission,
     asyncWrapper(usuarioController.delete.bind(usuarioController))
   );
 
