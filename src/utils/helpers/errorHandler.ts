@@ -2,7 +2,6 @@
 import { ZodError } from "zod";
 import logger from "../logger";
 import CommonResponse from "./CommonResponse";
-import { v4 as uuidv4 } from "uuid";
 import mongoose from "mongoose";
 import CustomError from "./CustomError";
 import { Response, Request, NextFunction } from "express";
@@ -25,10 +24,8 @@ const errorHandler = (
   next: NextFunction
 ) => {
   const isProduction = process.env.NODE_ENV === "production";
-  const errorId = uuidv4();
   const requestId = req.requestId || "N/A";
-
-  // Tratamento para erros de validação do Zod
+  
   if (err instanceof ZodError) {
     logger.warn("Erro de validação", {
       errors: err.issues,
@@ -47,8 +44,7 @@ const errorHandler = (
       `Erro de validação. ${err.issues.length} campo(s) inválido(s).`
     );
   }
-
-  // Tratamento para erro de chave duplicada no MongoDB (código 11000)
+  
   if ((err as MongoError).code === 11000) {
     const mongoErr = err as MongoError;
     const field = mongoErr.keyValue
@@ -76,8 +72,7 @@ const errorHandler = (
       `Entrada duplicada no campo "${field}".`
     );
   }
-
-  // Tratamento para erros de validação do Mongoose
+  
   if (err instanceof mongoose.Error.ValidationError) {
     const detalhes = Object.values(err.errors).map((e) => ({
       field: e.path,
@@ -90,8 +85,7 @@ const errorHandler = (
     });
     return CommonResponse.error(res, 400, "validationError", null, detalhes);
   }
-
-  // Tratamento específico para CustomError
+  
   if (err instanceof CustomError) {
     logger.warn("Erro customizado", {
       message: err.message,
@@ -107,8 +101,7 @@ const errorHandler = (
       err.customMessage || err.message
     );
   }
-
-  // Tratamento para erros operacionais
+  
   if ((err as any).isOperational) {
     logger.warn("Erro operacional", {
       message: err.message,
@@ -124,15 +117,14 @@ const errorHandler = (
       (err as any).customMessage || "Erro operacional."
     );
   }
-
-  // Tratamento para erros internos
-  logger.error(`Erro interno [ID: ${errorId}]`, {
+  
+  logger.error(`Erro interno`, {
     message: err.message,
     stack: err.stack,
     requestId,
   });
   const detalhes = isProduction
-    ? [{ message: `Erro interno do servidor. Referência: ${errorId}` }]
+    ? [{ message: `Erro interno do servidor.` }]
     : [{ message: err.message, stack: err.stack }];
 
   return CommonResponse.error(res, 500, "serverError", null, detalhes);
