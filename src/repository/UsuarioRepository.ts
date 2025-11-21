@@ -52,7 +52,6 @@ class UsuarioRepository {
     return usuario;
   }
 
-  //TODO: adicionar metodo patch
   async read(req: Request) {
     const { nome, email, papel, page = "1", limite = "10" } = req.query;
 

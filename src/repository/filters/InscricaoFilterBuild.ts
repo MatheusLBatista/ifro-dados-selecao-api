@@ -60,7 +60,7 @@ class InscricaoFilterBuild {
   }
 
   build() {
-    return this.filters;
+    return { ...this.filters };
   }
 }
 

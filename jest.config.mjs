@@ -3,6 +3,7 @@ export default {
   testEnvironment: "node",
   roots: ["<rootDir>/src"],
   testMatch: ["**/__tests__/**/*.ts", "**/?(*.)+(spec|test).ts"],
+  coveragePathIgnorePatterns: ["/node_modules/", "src/utils/helpers/", "app.ts", "src/config"],
   transform: {
     "^.+\\.ts$": "ts-jest",
   },
