@@ -45,4 +45,5 @@ class TokenUtil {
   }
 }
 
+export { TokenUtil };
 export default new TokenUtil();
