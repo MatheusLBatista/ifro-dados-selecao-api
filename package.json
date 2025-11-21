@@ -4,16 +4,16 @@
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "tsx server.ts",
     "seed": "tsx src/seeds/seeds.ts",
     "dev": "tsx watch server.ts",
     "build": "tsc",
     "test": "jest --coverage --detectOpenHandles"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["API", "inscrições", "gerenciamento", "Node.js", "TypeScript"],
+  "author": "Matheus Lucas Batista",
   "license": "ISC",
-  "description": "",
+  "description": "API para gerenciamento de inscrições.",
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.5",

@@ -1,11 +1,11 @@
-# API de Inscrição IFRO
+# IFRO Dados Seleção
 
-API REST para gerenciamento de inscrições e usuários do Instituto Federal de Rondônia (IFRO).
+API para gerenciamento de inscrições do Instituto Federal de Rondônia.
 
 ## Tecnologias Utilizadas
 
-- **Node.js** com **TypeScript**
-- **Express.js** - Framework web
+- **TypeScript** e **Node.js**
+- **Express** - Framework web
 - **MongoDB** com **Mongoose** - Banco de dados
 - **JWT** - Autenticação
 - **bcrypt** - Hash de senhas
@@ -13,69 +13,113 @@ API REST para gerenciamento de inscrições e usuários do Instituto Federal de 
 - **Swagger** - Documentação da API
 - **Jest** - Testes
 
-## Instalação
-
-1. Clone o repositório:
-
-```bash
-git clone <url-do-repositorio>
-cd api-inscricao
-```
-
-2. Instale as dependências:
-
-```bash
-npm install
-```
-
-3. Configure as variáveis de ambiente:
-
-```bash
-cp .env.example .env
-# Edite o arquivo .env com suas configurações
-```
-
-4. Execute as migrações do banco de dados (se necessário):
-
-```bash
-npm run seed
-```
-
 ## Executando a Aplicação
 
-### Desenvolvimento
+### Opção 1: Rodando com Docker (Recomendado)
+
+#### Pré-requisitos
+
+- Docker
+- Docker Compose
+
+#### Iniciar a aplicação
+
+```bash
+# Clone o repositório
+git clone <https://gitlab.fslab.dev/matheus.lucas.batista/ifro-dados-selecao-api.git>
+
+# Acesse o diretório do projeto
+cd ifro-dados-selecao-api
+
+# Construir e iniciar os containers
+docker compose up --build -d
+```
+
+Link da API: `http://localhost:5011`.
+
+#### Popular o banco de dados
+
+```bash
+docker compose exec app npm run seed
+```
+
+#### Executar testes no container
+
+```bash
+docker compose exec app npm run test
+```
+
+#### Parar os containers
+
+```bash
+docker compose down
+```
+
+#### Parar e remover volumes
+
+```bash
+docker compose down -v
+```
+
+### Opção 2: Rodando Localmente (sem Docker)
+
+#### Pré-requisitos
+
+- Node.js 18+
+- MongoDB instalado e rodando localmente
+- npm ou yarn
+
+#### Configuração
+
+```bash
+# Clone o repositório
+git clone <https://gitlab.fslab.dev/matheus.lucas.batista/ifro-dados-selecao-api.git>
+
+# Acesse o diretório do projeto
+cd ifro-dados-selecao-api
+
+# Instale as dependências
+npm install
+
+# Configure o arquivo .env
+cp .env.example .env
+# Edite o .env com suas configurações locais
+```
+
+#### Desenvolvimento
 
 ```bash
 npm run dev
 ```
 
-### Produção
+#### Popular o banco de dados
 
 ```bash
-npm run build
-npm start
+npm run seed
 ```
 
-### Testes
+#### Executar testes
 
 ```bash
-npm test
+npm run test
 ```
+
+---
 
 ## Documentação da API
 
-A documentação completa da API está disponível via Swagger UI em:
+A documentação swagger da API está disponível em:
 
 ```
 http://localhost:5011/api-docs
 ```
 
-### Endpoints Principais
+### Endpoints
 
 #### Autenticação
 
 - `POST /login` - Realizar login
-- `POST /logout` - Realizar logout
+- `POST /logout` - Realizar logout (requer autenticação)
 
 #### Usuários
 
@@ -93,7 +137,7 @@ http://localhost:5011/api-docs
 - `PATCH /inscricao/:id/avaliar` - Avaliar inscrição (requer autenticação)
 - `PATCH /inscricao/:id/aprovar` - Aprovar inscrição (requer autenticação)
 
-## Estrutura do Projeto
+## Estrutura do projeto
 
 ```
 src/
@@ -115,66 +159,8 @@ src/
 └── utils/                # Utilitários diversos
 ```
 
-## Autenticação
-
-A API utiliza autenticação baseada em JWT (JSON Web Tokens). Para acessar endpoints protegidos:
-
-1. Faça login através do endpoint `POST /login`
-2. Use o token retornado no header `Authorization`:
-   ```
-   Authorization: Bearer <seu-token-jwt>
-   ```
-
-### Papéis de Usuário
+### Papéis do usuário
 
 - **Administrador**: Acesso completo ao sistema
-- **Coordenador**: Gerenciamento de usuários e inscrições
-- **Avaliador**: Avaliação de inscrições
-
-## Validação de Dados
-
-A API utiliza Zod para validação de dados de entrada. Todos os campos obrigatórios são validados automaticamente.
-
-## Tratamento de Erros
-
-A API retorna erros padronizados com o seguinte formato:
-
-```json
-{
-  "success": false,
-  "message": "Mensagem de erro",
-  "error": {
-    "statusCode": 400,
-    "errorType": "validationError",
-    "field": "campo",
-    "details": ["detalhes do erro"],
-    "customMessage": "Mensagem personalizada"
-  }
-}
-```
-
-## Testes
-
-Os testes são executados com Jest e Supertest. Para executar:
-
-```bash
-npm test
-```
-
-Para executar com cobertura:
-
-```bash
-npm run test:coverage
-```
-
-## Contribuição
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
-3. Commit suas mudanças (`git commit -am 'Adiciona nova feature'`)
-4. Push para a branch (`git push origin feature/nova-feature`)
-5. Abra um Pull Request
-
-## Licença
-
-Este projeto está sob a licença MIT.
+- **Coordenador**: Listagem de usuários e inscrições e aprovação de inscrições
+- **Avaliador**: Listagem e avaliação de inscrições
