@@ -22,10 +22,6 @@ router
     asyncWrapper(inscricaoController.findEvaluated.bind(inscricaoController))
   )
   .get(
-    "/inscricao/avaliadas/:id", AuthMiddleware, AuthPermission,
-    asyncWrapper(inscricaoController.findEvaluated.bind(inscricaoController))
-  )
-  .get(
     "/inscricao/:id", AuthMiddleware, AuthPermission, 
     asyncWrapper(inscricaoController.read.bind(inscricaoController))
   )

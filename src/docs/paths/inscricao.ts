@@ -250,6 +250,102 @@ export const inscricaoPaths = {
       },
     },
   },
+  "/inscricao/{id}": {
+    get: {
+      summary: "Obter inscrição por ID",
+      tags: ["Inscrições"],
+      description: `  
+        + Caso de uso: Permitir que usuários autenticados obtenham os detalhes de uma inscrição específica pelo seu ID.
+
+            + Função de Negócio
+              - Permitir que avaliadores ou coordenadores acessem inscrições específicas.
+            
+            + Requisitos:
+              - Autenticação do usuário.
+              - Validação do ID da inscrição.
+
+            + Fluxo:
+              - Receber o ID da inscrição via path parameter.
+              - Validar permissões do usuário.
+              - Consultar o banco de dados para obter os detalhes da inscrição.
+              - Retornar os detalhes da inscrição.
+              
+            + Resultado Esperado:
+              - Detalhes completos da inscrição.
+      `,
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID da inscrição",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Inscrição encontrada",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  success: {
+                    type: "boolean",
+                    example: true,
+                  },
+                  message: {
+                    type: "string",
+                    example: "Inscrição encontrada",
+                  },
+                  data: {
+                    $ref: "#/components/schemas/Inscricao",
+                  },
+                },
+              },
+            },
+          },
+        },
+        401: {
+          description: "Não autorizado",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Error",
+              },
+            },
+          },
+        },
+        403: {
+          description: "Permissão insuficiente",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Error",
+              },
+            },
+          },
+        },
+        404: {
+          description: "Inscrição não encontrada",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Error",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   "/inscricao/avaliadas": {
     get: {
       summary: "Listar inscrições avaliadas para coordenadores",
@@ -405,198 +501,6 @@ export const inscricaoPaths = {
         },
         403: {
           description: "Permissão insuficiente",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Error",
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  "/inscricao/avaliadas/{id}": {
-    get: {
-      summary: "Obter inscrição avaliada por ID",
-      tags: ["Inscrições"],
-      description: `
-        + Caso de uso: Permitir que coordenadores obtenham os detalhes de uma inscrição avaliada específica pelo seu ID.
-
-            + Função de Negócio
-              - Facilitar a revisão detalhada das inscrições avaliadas antes da aprovação ou reprovação.
-            
-            + Requisitos:
-              - Autenticação e permissão de coordenador.
-              - Validação do ID da inscrição.
-
-            + Fluxo:
-              - Receber o ID da inscrição via path parameter.
-              - Validar permissões do usuário.
-              - Consultar o banco de dados para obter os detalhes da inscrição avaliada.
-              - Retornar os detalhes da inscrição avaliada.
-
-            + Resultado Esperado:
-              - Detalhes completos da inscrição avaliada.
-      `,
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
-      parameters: [
-        {
-          in: "path",
-          name: "id",
-          required: true,
-          schema: {
-            type: "string",
-          },
-          description: "ID da inscrição",
-        },
-      ],
-      responses: {
-        200: {
-          description: "Inscrição encontrada",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  success: {
-                    type: "boolean",
-                    example: true,
-                  },
-                  message: {
-                    type: "string",
-                    example: "Inscrição encontrada",
-                  },
-                  data: {
-                    $ref: "#/components/schemas/Inscricao",
-                  },
-                },
-              },
-            },
-          },
-        },
-        401: {
-          description: "Não autorizado",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Error",
-              },
-            },
-          },
-        },
-        403: {
-          description: "Permissão insuficiente",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Error",
-              },
-            },
-          },
-        },
-        404: {
-          description: "Inscrição não encontrada",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Error",
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  "/inscricao/{id}": {
-    get: {
-      summary: "Obter inscrição por ID",
-      tags: ["Inscrições"],
-      description: `  
-        + Caso de uso: Permitir que usuários autenticados obtenham os detalhes de uma inscrição específica pelo seu ID.
-
-            + Função de Negócio
-              - Permitir que avaliadores ou coordenadores acessem inscrições específicas.
-            
-            + Requisitos:
-              - Autenticação do usuário.
-              - Validação do ID da inscrição.
-
-            + Fluxo:
-              - Receber o ID da inscrição via path parameter.
-              - Validar permissões do usuário.
-              - Consultar o banco de dados para obter os detalhes da inscrição.
-              - Retornar os detalhes da inscrição.
-              
-            + Resultado Esperado:
-              - Detalhes completos da inscrição.
-      `,
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
-      parameters: [
-        {
-          in: "path",
-          name: "id",
-          required: true,
-          schema: {
-            type: "string",
-          },
-          description: "ID da inscrição",
-        },
-      ],
-      responses: {
-        200: {
-          description: "Inscrição encontrada",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  success: {
-                    type: "boolean",
-                    example: true,
-                  },
-                  message: {
-                    type: "string",
-                    example: "Inscrição encontrada",
-                  },
-                  data: {
-                    $ref: "#/components/schemas/Inscricao",
-                  },
-                },
-              },
-            },
-          },
-        },
-        401: {
-          description: "Não autorizado",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Error",
-              },
-            },
-          },
-        },
-        403: {
-          description: "Permissão insuficiente",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Error",
-              },
-            },
-          },
-        },
-        404: {
-          description: "Inscrição não encontrada",
           content: {
             "application/json": {
               schema: {
@@ -783,6 +687,28 @@ export const inscricaoPaths = {
           description: "ID da inscrição",
         },
       ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                status: {
+                  type: "string",
+                  description: "Aprovação da inscrição, deve ser 'APROVADO' ou 'REPROVADO'",
+                  enum: ["APROVADO", "REPROVADO"],
+                  example: "APROVADO",
+                },
+              },
+              required: ["status"],
+            },
+            example: {
+              status: "APROVADO",
+            },
+          },
+        },
+      },
       responses: {
         200: {
           description: "Inscrição aprovada com sucesso",
