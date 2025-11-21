@@ -33,6 +33,37 @@ describe("UsuarioService", () => {
       expect(mockRepository.read).toHaveBeenCalledWith(req);
       expect(result).toBe(mockData);
     });
+
+    it("deve retornar usuário específico quando ID é fornecido", async () => {
+      const mockUser = {
+        _id: "123",
+        nome: "João",
+        email: "joao@teste.com",
+      };
+      const req = { params: { id: "123" }, query: {} } as any;
+
+      mockRepository.findById.mockResolvedValue(mockUser as any);
+
+      const result = await service.read(req);
+
+      expect(mockRepository.findById).toHaveBeenCalledWith("123");
+      expect(result).toBe(mockUser);
+    });
+
+    it("deve validar query parameters quando fornecidos", async () => {
+      const mockData = [{ nome: "João", email: "joao@teste.com" }];
+      const req = {
+        params: {},
+        query: { nome: "João", page: "1" },
+      } as any;
+
+      mockRepository.read.mockResolvedValue(mockData as any);
+
+      const result = await service.read(req);
+
+      expect(mockRepository.read).toHaveBeenCalledWith(req);
+      expect(result).toBe(mockData);
+    });
   });
 
   describe("create", () => {

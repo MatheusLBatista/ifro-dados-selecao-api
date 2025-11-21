@@ -3,6 +3,7 @@ import { UsuarioDTO } from "../utils/validators/schemas/UsuarioSchema";
 import UsuarioRepository from "../repository/UsuarioRepository";
 import AuthHelper from "../utils/AuthHelper";
 import { CustomError, HttpStatusCodes } from "../utils/helpers";
+import { UsuarioQuerySchema } from "../utils/validators/schemas/queries/UsuarioQuerySchema";
 
 class UsuarioService {
   private repository: UsuarioRepository;
@@ -12,6 +13,18 @@ class UsuarioService {
   }
 
   async read(req: Request) {
+    const { id } = req.params;
+
+    if (id) {
+      const data = await this.repository.findById(id);
+      return data;
+    }
+
+    const query = req.query || {};
+    if (Object.keys(query).length !== 0) {
+      await UsuarioQuerySchema.parseAsync(query);
+    }
+
     const data = await this.repository.read(req);
     console.log(
       "Estou retornando os dados em UsuarioService para o controller"

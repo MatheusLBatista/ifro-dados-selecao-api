@@ -134,7 +134,6 @@ http://localhost:5011/api-docs
 - `GET /inscricao` - Listar inscrições (requer autenticação)
 - `GET /inscricao/:id` - Obter inscrição por ID (requer autenticação)
 - `GET /inscricao/avaliadas` - Listar inscrições avaliadas (requer autenticação)
-- `GET /inscricao/avaliadas/:id` - Obter inscrição avaliada por ID (requer autenticação)
 - `PATCH /inscricao/:id/avaliar` - Avaliar inscrição (requer autenticação)
 - `PATCH /inscricao/:id/aprovar` - Aprovar inscrição (requer autenticação)
 
