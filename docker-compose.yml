@@ -1,0 +1,21 @@
+services:
+  mongo:
+    container_name: mongo_db
+    image: mongo:8
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  app:
+    container_name: api_inscricao_app
+    build: ./
+    ports:
+      - "5011:5011"
+    environment:
+      - DB_URL=mongodb://mongo:27017/api_inscricao
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:
