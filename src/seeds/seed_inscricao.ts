@@ -35,6 +35,8 @@ export default async function seed_inscricao(): Promise<InscricaoDTO[]> {
     experiencia:
       "Atuei por 1 ano como estagiário back-end em uma startup de fintech.",
     area_interesse: "Back-end Node.js",
+    pontuacao: 8,
+    observacao: "Disponível para trabalhar remotamente",
     status: Status.PENDENTE,
   });
 

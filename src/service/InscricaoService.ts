@@ -63,11 +63,11 @@ class InscricaoService {
   }
 
   async evaluate(id: string, parsedData: InscricaoUpdateDTO) {
-    const { pontuacao } = parsedData;
+    const { pontuacao, observacao } = parsedData;
 
-    this.maintainPermittedFields(parsedData, ["pontuacao"]);
+    this.maintainPermittedFields(parsedData, ["pontuacao", "observacao"]);
 
-    const data = await this.repository.evaluate(id, { pontuacao } as any);
+    const data = await this.repository.evaluate(id, { pontuacao, observacao } as any);
     return data;
   }
 
