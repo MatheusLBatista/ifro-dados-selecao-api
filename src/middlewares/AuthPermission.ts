@@ -19,10 +19,10 @@ const ROUTE_RULES: Record<string, Record<string, string[]>> = {
     GET: ["administrador", "coordenador", "avaliador"],
   },
   "/inscricao/avaliadas": {
-    GET: ["administrador", "coordenador", "avaliador"],
+    GET: ["administrador", "coordenador"],
   },
   "/inscricao/avaliadas/:id": {
-    GET: ["administrador", "coordenador", "avaliador"],
+    GET: ["administrador", "coordenador"],
   },
   "/inscricao/:id": {
     GET: ["administrador", "coordenador", "avaliador"],
