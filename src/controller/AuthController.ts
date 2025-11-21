@@ -14,7 +14,7 @@ class AuthController {
   }
 
   login = async (req: Request, res: Response) => {
-    const body = req.body || {};
+    const body = req.body;
     const parsedData = LoginSchema.parse(body);
     const data = await this.service.login(parsedData);
     return CommonResponse.success(res, data);

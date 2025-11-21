@@ -40,7 +40,6 @@ class UsuarioController {
 
   async delete(req: Request, res: Response) {
     const id: string | undefined = req?.params?.id;
-    MongoIdSchema.parse(id);
 
     if (!id) {
       throw new CustomError({
@@ -51,6 +50,8 @@ class UsuarioController {
         customMessage: "ID do usuário é obrigatório para deletar.",
       });
     }
+
+    MongoIdSchema.parse(id);
 
     const data = await this.service.deletar(id, req);
     return CommonResponse.success(
