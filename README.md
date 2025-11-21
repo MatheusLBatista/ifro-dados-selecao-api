@@ -1,6 +1,33 @@
 # IFRO Dados Seleção
 
-API para gerenciamento de inscrições do Instituto Federal de Rondônia.
+API REST para gerenciamento de inscrições do Instituto Federal de Rondônia.
+
+## Sobre o Projeto
+
+Esta API foi desenvolvida para gerenciar o processo de inscrições de candidatos, permitindo:
+- Cadastro e gestão de usuários com diferentes níveis de permissão
+- Registro de inscrições de candidatos
+- Avaliação de inscrições por avaliadores
+- Aprovação/reprovação de candidatos por coordenadores
+- Documentação interativa com Swagger
+
+## Decisões Técnicas
+
+### Arquitetura e Padrões
+
+**Arquitetura em Camadas**
+- Optei o padrão de arquitetura em camadas (Controller → Service → Repository) para:
+  - Separação clara de responsabilidades
+  - Facilitar manutenção e testes unitários
+  - Permitir reutilização de lógica de negócio
+
+### Segurança
+
+- **bcrypt**: Hash de senhas com salt, resistente a ataques de força bruta
+- **JWT**: Tokens com expiração e refresh tokens para sessões seguras
+- **Middleware de permissões**: Sistema de roles (Admin, Coordenador, Avaliador)
+- **Validação de entrada**: Zod previne injeção e dados inválidos
+- **Variáveis de ambiente**: Credenciais e secrets nunca commitadas no código
 
 ## Tecnologias Utilizadas
 
