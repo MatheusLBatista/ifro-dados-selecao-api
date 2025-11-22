@@ -37,8 +37,30 @@ export default async function seed_inscricao(): Promise<InscricaoDTO[]> {
     area_interesse: "Back-end Node.js",
     pontuacao: 8,
     observacao: "Disponível para trabalhar remotamente",
-    status: Status.PENDENTE,
-  });
+    status: Status.APROVADO,
+  },
+  {
+      nome: "Bruno Silva Santos",
+      email: "bruno.silva@email.com",
+      telefone: "69988723354",
+      data_nascimento: "09-10-2000",
+      background: [
+        {
+          certificado: "https://udemy.com/certificate/UC-abc123xyz",
+          descricao: "Curso completo de Node.js e Express com mais de 40 horas.",
+        },
+        {
+          certificado: "https://udemy.com/certificate/UC-typescript",
+          descricao: "Curso de Typescript e Next.js com mais de 100 horas.",
+        },
+      ],
+      experiencia:
+        "Atuei por 1 ano como estagiário back-end em uma startup de fintech.",
+      area_interesse: "Back-end Node.js",
+      pontuacao: 8,
+      observacao: "Disponível para trabalhar híbrido(remoto e presencial)",
+      status: Status.REPROVADO,
+    });
 
   for (let i = 0; i <= 10; i++) {
     inscricoes.push({
@@ -57,7 +79,7 @@ export default async function seed_inscricao(): Promise<InscricaoDTO[]> {
       experiencia: faker.lorem.paragraph(),
       area_interesse: faker.person.jobArea(),
       observacao: faker.lorem.sentence(),
-      status: faker.helpers.arrayElement(Object.values(Status)),
+      status: Status.PENDENTE,
     });
   }
 
