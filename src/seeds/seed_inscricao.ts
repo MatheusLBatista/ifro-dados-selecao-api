@@ -60,7 +60,51 @@ export default async function seed_inscricao(): Promise<InscricaoDTO[]> {
       pontuacao: 8,
       observacao: "Disponível para trabalhar híbrido(remoto e presencial)",
       status: Status.REPROVADO,
-    });
+    },
+  {
+      nome: "Thaina Costa Lima",
+      email: "thaina.costa@email.com",
+      telefone: "69988723394",
+      data_nascimento: "09-10-2004",
+      background: [
+        {
+          certificado: "https://udemy.com/certificate/UC-abc123xyz",
+          descricao: "Curso completo de Node.js e Express com mais de 40 horas.",
+        },
+        {
+          certificado: "https://udemy.com/certificate/UC-typescript",
+          descricao: "Curso de Typescript e Next.js com mais de 100 horas.",
+        },
+      ],
+      experiencia:
+        "Atuei por 1 ano como estagiário back-end em uma startup de fintech.",
+      area_interesse: "Back-end Node.js",
+      pontuacao: 10,
+      observacao: "Disponível para trabalhar híbrido(remoto e presencial)",
+      status: Status.PENDENTE,
+    },
+    {
+        nome: "Maria Luiza Lima",
+        email: "maria.luiza@email.com",
+        telefone: "69988423394",
+        data_nascimento: "01-11-2001",
+        background: [
+          {
+            certificado: "https://udemy.com/certificate/UC-abc123xyz",
+            descricao: "Curso completo de Node.js e Express com mais de 40 horas.",
+          },
+          {
+            certificado: "https://udemy.com/certificate/UC-typescript",
+            descricao: "Curso de Typescript e Next.js com mais de 100 horas.",
+          },
+        ],
+        experiencia:
+          "Atuei por 1 ano como estagiário back-end em uma startup de fintech.",
+        area_interesse: "Back-end Node.js",
+        pontuacao: 2,
+        observacao: "Disponível durante os finais de semana",
+        status: Status.PENDENTE,
+      });
 
   for (let i = 0; i <= 10; i++) {
     inscricoes.push({
