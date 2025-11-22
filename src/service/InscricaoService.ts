@@ -6,6 +6,7 @@ import {
 import { CustomError, HttpStatusCodes } from "../utils/helpers";
 import { Request } from "express";
 import { InscricaoQuerySchema } from "../utils/validators/schemas/queries/InscricaoQuerySchema";
+import { Status } from "../models/Inscricao";
 
 class InscricaoService {
   private repository: InscricaoRepository;
@@ -67,6 +68,28 @@ class InscricaoService {
 
     this.maintainPermittedFields(parsedData, ["pontuacao", "observacao"]);
 
+    const inscricaoAtual = await this.repository.findById(id);
+    
+    if (!inscricaoAtual) {
+      throw new CustomError({
+        statusCode: HttpStatusCodes.NOT_FOUND.code,
+        errorType: "notFound",
+        field: "id",
+        details: [],
+        customMessage: "Inscrição não encontrada.",
+      });
+    }
+
+    if (inscricaoAtual.status === Status.APROVADO || inscricaoAtual.status === Status.REPROVADO) {
+      throw new CustomError({
+        statusCode: HttpStatusCodes.BAD_REQUEST.code,
+        errorType: "validationError",
+        field: "status",
+        details: [],
+        customMessage: "Não é possível avaliar uma inscrição com status APROVADO ou REPROVADO.",
+      });
+    }
+
     const data = await this.repository.evaluate(id, { pontuacao, observacao } as any);
     return data;
   }
@@ -75,6 +98,28 @@ class InscricaoService {
     const { status } = parsedData;
 
     this.maintainPermittedFields(parsedData, ["status"]);
+
+    const inscricaoAtual = await this.repository.findById(id);
+    
+    if (!inscricaoAtual) {
+      throw new CustomError({
+        statusCode: HttpStatusCodes.NOT_FOUND.code,
+        errorType: "notFound",
+        field: "id",
+        details: [],
+        customMessage: "Inscrição não encontrada.",
+      });
+    }
+
+    if (inscricaoAtual.pontuacao === null || inscricaoAtual.pontuacao === undefined) {
+      throw new CustomError({
+        statusCode: HttpStatusCodes.BAD_REQUEST.code,
+        errorType: "validationError",
+        field: "pontuacao",
+        details: [],
+        customMessage: "Pontuação deve ser definida antes de aprovar a inscrição.",
+      });
+    }
 
     const data = await this.repository.approve(id, { status } as any);
     return data;
