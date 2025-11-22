@@ -186,34 +186,111 @@ describe("InscricaoService", () => {
   describe("evaluate", () => {
     it("deve avaliar inscrição com sucesso", async () => {
       const id = "123";
-      const parsedData = { pontuacao: 8, status: "avaliado" as any };
-      const mockResult = { _id: "123", pontuacao: 8 };
+      const parsedData = { pontuacao: 8, observacao: "Boa apresentação" };
+      const mockInscricao = { _id: "123", status: "PENDENTE", pontuacao: null };
+      const mockResult = { _id: "123", pontuacao: 8, observacao: "Boa apresentação" };
 
+      mockRepository.findById.mockResolvedValue(mockInscricao as any);
       mockRepository.evaluate.mockResolvedValue(mockResult as any);
 
       const result = await service.evaluate(id, parsedData);
 
+      expect(mockRepository.findById).toHaveBeenCalledWith("123");
       expect(mockRepository.evaluate).toHaveBeenCalledWith("123", {
         pontuacao: 8,
+        observacao: "Boa apresentação",
       });
       expect(result).toBe(mockResult);
+    });
+
+    it("deve lançar erro quando inscrição não é encontrada", async () => {
+      const id = "123";
+      const parsedData = { pontuacao: 8, observacao: "Boa apresentação" };
+
+      mockRepository.findById.mockResolvedValue(null as any);
+
+      await expect(service.evaluate(id, parsedData)).rejects.toThrow(CustomError);
+      expect(mockRepository.findById).toHaveBeenCalledWith("123");
+      expect(mockRepository.evaluate).not.toHaveBeenCalled();
+    });
+
+    it("deve lançar erro quando inscrição já está APROVADA", async () => {
+      const id = "123";
+      const parsedData = { pontuacao: 8, observacao: "Boa apresentação" };
+      const mockInscricao = { _id: "123", status: "APROVADO", pontuacao: 8 };
+
+      mockRepository.findById.mockResolvedValue(mockInscricao as any);
+
+      await expect(service.evaluate(id, parsedData)).rejects.toThrow(CustomError);
+      expect(mockRepository.findById).toHaveBeenCalledWith("123");
+      expect(mockRepository.evaluate).not.toHaveBeenCalled();
+    });
+
+    it("deve lançar erro quando inscrição já está REPROVADA", async () => {
+      const id = "123";
+      const parsedData = { pontuacao: 8, observacao: "Boa apresentação" };
+      const mockInscricao = { _id: "123", status: "REPROVADO", pontuacao: 5 };
+
+      mockRepository.findById.mockResolvedValue(mockInscricao as any);
+
+      await expect(service.evaluate(id, parsedData)).rejects.toThrow(CustomError);
+      expect(mockRepository.findById).toHaveBeenCalledWith("123");
+      expect(mockRepository.evaluate).not.toHaveBeenCalled();
     });
   });
 
   describe("approve", () => {
     it("deve aprovar inscrição com sucesso", async () => {
       const id = "123";
-      const parsedData = { status: "APROVADO" as any, pontuacao: 9 };
+      const parsedData = { status: "APROVADO" as any };
+      const mockInscricao = { _id: "123", status: "PENDENTE", pontuacao: 8 };
       const mockResult = { _id: "123", status: "APROVADO" };
 
+      mockRepository.findById.mockResolvedValue(mockInscricao as any);
       mockRepository.approve.mockResolvedValue(mockResult as any);
 
       const result = await service.approve(id, parsedData);
 
+      expect(mockRepository.findById).toHaveBeenCalledWith("123");
       expect(mockRepository.approve).toHaveBeenCalledWith("123", {
         status: "APROVADO",
       });
       expect(result).toBe(mockResult);
+    });
+
+    it("deve lançar erro quando inscrição não é encontrada", async () => {
+      const id = "123";
+      const parsedData = { status: "APROVADO" as any };
+
+      mockRepository.findById.mockResolvedValue(null as any);
+
+      await expect(service.approve(id, parsedData)).rejects.toThrow(CustomError);
+      expect(mockRepository.findById).toHaveBeenCalledWith("123");
+      expect(mockRepository.approve).not.toHaveBeenCalled();
+    });
+
+    it("deve lançar erro quando inscrição não tem pontuação", async () => {
+      const id = "123";
+      const parsedData = { status: "APROVADO" as any };
+      const mockInscricao = { _id: "123", status: "PENDENTE", pontuacao: null };
+
+      mockRepository.findById.mockResolvedValue(mockInscricao as any);
+
+      await expect(service.approve(id, parsedData)).rejects.toThrow(CustomError);
+      expect(mockRepository.findById).toHaveBeenCalledWith("123");
+      expect(mockRepository.approve).not.toHaveBeenCalled();
+    });
+
+    it("deve lançar erro quando inscrição tem pontuação undefined", async () => {
+      const id = "123";
+      const parsedData = { status: "APROVADO" as any };
+      const mockInscricao = { _id: "123", status: "PENDENTE", pontuacao: undefined };
+
+      mockRepository.findById.mockResolvedValue(mockInscricao as any);
+
+      await expect(service.approve(id, parsedData)).rejects.toThrow(CustomError);
+      expect(mockRepository.findById).toHaveBeenCalledWith("123");
+      expect(mockRepository.approve).not.toHaveBeenCalled();
     });
   });
 
